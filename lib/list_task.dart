@@ -7,7 +7,7 @@ class ListTask extends StatelessWidget{
   final List <Task> listTask ;
   const ListTask({@required this.listTask});
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     return ListView(
       children: getTask(),
     );
@@ -15,5 +15,5 @@ class ListTask extends StatelessWidget{
   List<Widget> getTask(){
     return listTask.map((e) => ItemTask(task: e)).toList();
   }
-  
+
 }

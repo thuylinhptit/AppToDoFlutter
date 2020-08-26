@@ -17,7 +17,7 @@ class _BottomNavigaton extends State<BottomNavigation>{
         child: HomeScreen(),
     ),
     Text(
-      'State',
+      'Stats',
     ),
   ];
 

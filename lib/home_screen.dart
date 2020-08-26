@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'all_task.dart';
-
 
 class HomeScreen extends StatefulWidget{
   @override
@@ -66,22 +64,6 @@ class _HomeScreen extends State<HomeScreen> {
               ),
             ],
           ),
-//          body: Padding(
-//              padding: const EdgeInsets.all(0.0),
-//              child: Consumer<TodoTasks> (
-//                builder: (context, model, child){
-//                  if(model.status == TodoStatus.allTasks ){
-//                    return ChoiceCard(choice: choices[0]);
-//                  }
-//                  else if( model.status == TodoStatus.completedtask ){
-//                    return ChoiceCard(choice: choices[2],);
-//                  }
-//                  else{
-//                    return ChoiceCard( choice: choices[1],);
-//                  }
-//                },
-//              )
-//          ),
         body: Consumer<TodoTasks> (
           builder: (context, model, _) {
             return  ListTask( listTask: model.tasks,);
@@ -137,48 +119,26 @@ const List <ClickAll> listClickAll = const<ClickAll>[
   const ClickAll(title: 'All Delete', icon: Icons.delete_forever)
 ];
 
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-  final Choice choice;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.black,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-
-        //    Text(choice.title, style: TextStyle(color: Colors.white, fontSize: 35)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ClickAllCard extends StatelessWidget {
-  const ClickAllCard({Key key, this.clickAll}) : super(key: key);
-
-  final ClickAll clickAll;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
-    return Card(
-      color: Colors.black26,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(clickAll.icon, size: 128.0, color: textStyle.color),
-            Text(clickAll.title, style: textStyle),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//class ClickAllCard extends StatelessWidget {
+//  const ClickAllCard({Key key, this.clickAll}) : super(key: key);
+//
+//  final ClickAll clickAll;
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
+//    return Card(
+//      color: Colors.black26,
+//      child: Center(
+//        child: Column(
+//          mainAxisSize: MainAxisSize.min,
+//          crossAxisAlignment: CrossAxisAlignment.center,
+//          children: <Widget>[
+//            Icon(clickAll.icon, size: 128.0, color: textStyle.color),
+//            Text(clickAll.title, style: textStyle),
+//          ],
+//        ),
+//      ),
+//    );
+//  }
+//}
