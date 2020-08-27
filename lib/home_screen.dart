@@ -1,3 +1,4 @@
+import 'package:apptodo_flutter/Task.dart';
 import 'package:apptodo_flutter/Todo_Tasks.dart';
 import 'package:apptodo_flutter/add_task.dart';
 import 'package:apptodo_flutter/list_task.dart';
@@ -12,8 +13,7 @@ class HomeScreen extends StatefulWidget{
 
 }
 class _HomeScreen extends State<HomeScreen> {
-  ClickAll _selectClickAll = listClickAll[0];
-  TodoTasks _todoTasksProvider;
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _HomeScreen extends State<HomeScreen> {
                               || choice.index == 3 && model.status == TodoStatus.completedtask
                           ) {
                             color= Colors.blue;
-                          };
+                          }
                           return PopupMenuItem<Choice>(
                               value: choice,
                               child: Text(choice.title, style: TextStyle( color:  color), ));
@@ -50,25 +50,28 @@ class _HomeScreen extends State<HomeScreen> {
                   },
                 ),
 
-              PopupMenuButton<ClickAll>(
-                onSelected: selectClickAll,
-                icon: Icon(Icons.more_horiz),
-                itemBuilder: (BuildContext context) {
-                  return listClickAll.map((ClickAll clickAll) {
-                    return PopupMenuItem<ClickAll>(
-                      value: clickAll,
-                      child: Text(clickAll.title),
-                    );
-                  }).toList();
-                },
+             PopupMenuButton<ClickAll>(
+                    onSelected: (ClickAll clickAll) {
+                      selectClickAll(clickAll, context);
+                    },
+                    icon: Icon(Icons.more_horiz),
+                    itemBuilder: (BuildContext context) {
+                      return listClickAll.map((ClickAll clickAll) {
+                        return PopupMenuItem<ClickAll>(
+                          value: clickAll,
+                          child: Text(clickAll.title),
+                        );
+                      }).toList();
+                    },
+
               ),
             ],
           ),
-        body: Consumer<TodoTasks> (
-          builder: (context, model, _) {
-            return  ListTask( listTask: model.tasks,);
-          },
-        ),
+          body: Consumer<TodoTasks> (
+            builder: (context, model, _) {
+              return  ListTask( listTask: model.tasks,);
+            }
+          ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 10, 20),
             child: FloatingActionButton(
@@ -84,14 +87,17 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   void _select(Choice choice, BuildContext context) {
-    Provider.of<TodoTasks>(context, listen: false).ChoiceStatus(choice);
+    Provider.of<TodoTasks>(context, listen: false).choiceStatus(choice);
   }
 
-  void selectClickAll (ClickAll clickAll){
-//    setState(() {
-//      _selectClickAll = clickAll;
-//    });
-
+  void selectClickAll (ClickAll clickAll, BuildContext context){
+    var todoProvider =  Provider.of<TodoTasks>( context, listen: false);
+    if( clickAll.index == 1 ){
+      todoProvider.fullDone();
+    }
+    else{
+      todoProvider.fullDelete();
+    }
   }
 
 }
@@ -109,36 +115,12 @@ const List <Choice> choices = const <Choice>[
 ];
 
 class ClickAll{
-  const ClickAll({this.title, this.icon});
+  const ClickAll({this.title, this.index});
   final String title;
-  final IconData icon;
+  final int index;
 }
 
 const List <ClickAll> listClickAll = const<ClickAll>[
-  const ClickAll(title: 'All Done', icon:  Icons.done_all),
-  const ClickAll(title: 'All Delete', icon: Icons.delete_forever)
+  const ClickAll(title: 'All Done', index: 1),
+  const ClickAll(title: 'All Delete', index: 2)
 ];
-
-//class ClickAllCard extends StatelessWidget {
-//  const ClickAllCard({Key key, this.clickAll}) : super(key: key);
-//
-//  final ClickAll clickAll;
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
-//    return Card(
-//      color: Colors.black26,
-//      child: Center(
-//        child: Column(
-//          mainAxisSize: MainAxisSize.min,
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            Icon(clickAll.icon, size: 128.0, color: textStyle.color),
-//            Text(clickAll.title, style: textStyle),
-//          ],
-//        ),
-//      ),
-//    );
-//  }
-//}

@@ -1,5 +1,7 @@
+import 'package:apptodo_flutter/Todo_Tasks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'home_screen.dart';
 
@@ -16,9 +18,35 @@ class _BottomNavigaton extends State<BottomNavigation>{
     Center(
         child: HomeScreen(),
     ),
-    Text(
-      'Stats',
-    ),
+    Center(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Stats', style: TextStyle(fontSize: 25),),
+        ),
+        body: Center(
+          child: Consumer<TodoTasks>(
+
+            builder:(context, model, _) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Completed Tasks'
+                ),
+                Text(
+                  '${model.countComplete()}'
+                ),
+                Text(
+                  'Incomplete Tasks'
+                ),
+                Text(
+                    '${model.countIncomplete()}'
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    )
   ];
 
   @override

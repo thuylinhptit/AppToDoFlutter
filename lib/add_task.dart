@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import 'Task.dart';
 
 class AddTask extends StatefulWidget{
+  final Task task;
+  final int index;
+
+  AddTask({ this.task, this.index});
   @override
   _AddTask createState() => _AddTask();
 
@@ -14,6 +18,14 @@ class AddTask extends StatefulWidget{
 class _AddTask extends State<AddTask>{
   final taskTextController = TextEditingController();
   bool statusDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if( widget.task != null ){
+      taskTextController.text=widget.task.title;
+    }
+  }
 
   @override
   void dispose() {
@@ -45,7 +57,7 @@ class _AddTask extends State<AddTask>{
                   ),
                   RaisedButton(
                     child: Text('Add'),
-                    onPressed: onAdd,
+                    onPressed: onSubmit,
                   ),
                 ],
               ),
@@ -55,15 +67,22 @@ class _AddTask extends State<AddTask>{
       ),
     );
   }
-  void onAdd(){
+  void onSubmit(){
     final String tasktext = taskTextController.text;
     final bool isdone = statusDone;
-    print('Add');
+    var todoTaskProvider = Provider.of<TodoTasks>(context, listen: false);
+
+    // Edit
+    if( widget.task != null && widget.index != null ){
+      todoTaskProvider.editTask(widget.index, Task(title: taskTextController.text, isdone: widget.task.isdone ));
+      Navigator.pop(context);
+      return;
+    }
+    //Add
     if (tasktext.isNotEmpty) {
        Task todo = Task(
         title: tasktext, isdone : isdone,
       );
-      var todoTaskProvider = Provider.of<TodoTasks>(context, listen: false);
       todoTaskProvider.addTask(todo);
       Navigator.pop(context);
       print('Done Add');
