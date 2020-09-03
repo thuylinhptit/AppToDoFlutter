@@ -4,7 +4,9 @@ import 'package:apptodo_flutter/add_task.dart';
 import 'package:apptodo_flutter/list_task.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:random_color/random_color.dart';
 
 
 class HomeScreen extends StatefulWidget{
@@ -14,43 +16,41 @@ class HomeScreen extends StatefulWidget{
 }
 class _HomeScreen extends State<HomeScreen> {
 
-
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: Colors.black26,
-          appBar: AppBar(
-            title: Text('App To Do', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600 , color: Colors.white),),
-            backgroundColor: Colors.black54,
-            actions: <Widget> [
-              Consumer<TodoTasks>(
-                  builder: (context, model, _) {
-                    return PopupMenuButton<Choice>(
-                      onSelected: (Choice choice) {
-                        _select(choice, context);
-                      },
-                      icon: Icon(Icons.menu),
-                      itemBuilder: (BuildContext context) {
-                        return choices.map((Choice choice) {
-                          var color = Colors.black87;
-                          if( choice.index == 1 && model.status == TodoStatus.allTasks
-                              || choice.index == 2 && model.status == TodoStatus.incompleteTasks
-                              || choice.index == 3 && model.status == TodoStatus.completedtask
-                          ) {
-                            color= Colors.blue;
-                          }
-                          return PopupMenuItem<Choice>(
-                              value: choice,
-                              child: Text(choice.title, style: TextStyle( color:  color), ));
-                        }).toList();
-                      },
-                    );
-                  },
-                ),
+    return  Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                title: Text('App To Do', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600 , color: Colors.white),),
+                backgroundColor: Colors.lightBlueAccent,
+                actions: <Widget> [
+                  Consumer<TodoTasks>(
+                    builder: (context, model, _) {
+                      return PopupMenuButton<Choice>(
+                        onSelected: (Choice choice) {
+                          _select(choice, context);
+                        },
+                        icon: Icon(Icons.menu),
+                        itemBuilder: (BuildContext context) {
+                          return choices.map((Choice choice) {
+                            var color = Colors.black87;
+                            if( choice.index == 1 && model.status == TodoStatus.allTasks
+                                || choice.index == 2 && model.status == TodoStatus.incompleteTasks
+                                || choice.index == 3 && model.status == TodoStatus.completedtask
+                            ) {
+                              color= Colors.blue;
+                            }
+                            return PopupMenuItem<Choice>(
+                                value: choice,
+                                child: Text(choice.title, style: TextStyle( color:  color), ));
+                          }).toList();
+                        },
+                      );
+                    },
+                  ),
 
-             PopupMenuButton<ClickAll>(
+                  PopupMenuButton<ClickAll>(
                     onSelected: (ClickAll clickAll) {
                       selectClickAll(clickAll, context);
                     },
@@ -64,26 +64,27 @@ class _HomeScreen extends State<HomeScreen> {
                       }).toList();
                     },
 
+                  ),
+                ],
               ),
-            ],
-          ),
-          body: Consumer<TodoTasks> (
-            builder: (context, model, _) {
-              return  ListTask( listTask: model.tasks,);
-            }
-          ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 10, 20),
-            child: FloatingActionButton(
-              child: Icon(Icons.add),
-              backgroundColor: Colors.green,
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute( builder: (context) => AddTask()) );
-              },
+              body: Consumer<TodoTasks> (
+                  builder: (context, model, _) {
+                    return  ListTask( listTask: model.tasks,);
+                  }
+              ),
+              floatingActionButton: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 20),
+                child: FloatingActionButton(
+                  child: Icon(Icons.add),
+                  backgroundColor: Colors.lightBlueAccent,
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute( builder: (context) => AddTask()) );
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-    );
+          ],
+        );
   }
 
   void _select(Choice choice, BuildContext context) {

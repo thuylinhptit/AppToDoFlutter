@@ -2,7 +2,6 @@ import 'package:apptodo_flutter/Todo_Tasks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'home_screen.dart';
 
 class BottomNavigation extends StatefulWidget{
@@ -13,6 +12,7 @@ class BottomNavigation extends StatefulWidget{
 }
 
 class _BottomNavigaton extends State<BottomNavigation>{
+
   var _selectedIndex = 0;
    List<Widget> _widgetOptions = <Widget>[
     Center(
@@ -21,7 +21,10 @@ class _BottomNavigaton extends State<BottomNavigation>{
     Center(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Stats', style: TextStyle(fontSize: 25),),
+          centerTitle: true,
+          title: Text('Stats', style: TextStyle(fontSize: 25),
+          ),
+          backgroundColor: Colors.lightBlueAccent,
         ),
         body: Center(
           child: Consumer<TodoTasks>(
@@ -30,23 +33,33 @@ class _BottomNavigaton extends State<BottomNavigation>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Completed Tasks'
+                  'Completed Tasks', style: TextStyle( color: Colors.black, fontSize: 25),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 15),
+                  child: Text(
+                    '${model.countComplete()}', style: TextStyle( fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Text(
-                  '${model.countComplete()}'
+                  'Incomplete Tasks',style: TextStyle( color: Colors.black, fontSize: 25),
                 ),
                 Text(
-                  'Incomplete Tasks'
-                ),
-                Text(
-                    '${model.countIncomplete()}'
+                    '${model.countIncomplete()}',style: TextStyle( fontSize: 30, fontWeight: FontWeight.bold),
                 )
               ],
             ),
           ),
         ),
+
       ),
-    )
+    ),
+     Center(
+//       child: Consumer<TodoTasks> (
+//
+//       ),
+
+     )
   ];
 
   @override
@@ -65,10 +78,14 @@ class _BottomNavigaton extends State<BottomNavigation>{
                 icon: Icon(Icons.arrow_back),
                 title: Text('Stats', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),)
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.redo),
+              title: Text('History', style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),)
+            )
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.green,
-          backgroundColor: Colors.black87,
+          selectedItemColor: Colors.white,
+          backgroundColor: Colors.lightBlueAccent,
           onTap: _onTapItem,
         ),
     );

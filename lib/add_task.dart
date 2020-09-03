@@ -1,4 +1,5 @@
 import 'package:apptodo_flutter/Todo_Tasks.dart';
+import 'package:apptodo_flutter/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +13,11 @@ class AddTask extends StatefulWidget{
   AddTask({ this.task, this.index});
   @override
   _AddTask createState() => _AddTask();
-
 }
 
-class _AddTask extends State<AddTask>{
+final dbHelper = DatabaseHelper();
+
+class _AddTask extends State<AddTask> {
   final taskTextController = TextEditingController();
   bool statusDone = false;
 
@@ -35,9 +37,12 @@ class _AddTask extends State<AddTask>{
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Add Task'),
+        backgroundColor: Colors.lightBlueAccent,
       ),
       body: ListView(
         children: <Widget>[
@@ -51,13 +56,19 @@ class _AddTask extends State<AddTask>{
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 40),
                     child: TextField(
                       controller: taskTextController,
+                      style: TextStyle(color: Colors.black, fontSize: 20),
                       decoration: InputDecoration(
-                        labelText: 'Add Task'
-                      ),),
+                        labelText: 'Add Todo'
+                      ),
+                    )
                   ),
-                  RaisedButton(
-                    child: Text('Add'),
-                    onPressed: onSubmit,
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: RaisedButton(
+                      color: Colors.lightBlueAccent,
+                      child: Text('Add'),
+                      onPressed: onSubmit,
+                    ),
                   ),
                 ],
               ),
@@ -75,7 +86,8 @@ class _AddTask extends State<AddTask>{
 
     // Edit
     if( widget.task != null && widget.index != null ){
-      todoTaskProvider.editTask(widget.index, Task(title: taskTextController.text, isdone: widget.task.isdone ));
+      todoTaskProvider.editTask(widget.index, Task(title: taskTextController.text,
+          isdone: widget.task.isdone));
       Navigator.pop(context);
       return;
     }
@@ -85,9 +97,11 @@ class _AddTask extends State<AddTask>{
         title: tasktext, isdone : isdone,
       );
       todoTaskProvider.addTask(todo);
+       DatabaseHelper().insertTask(todo);
       Navigator.pop(context);
       print('Done Add');
     }
   }
+
 
 }

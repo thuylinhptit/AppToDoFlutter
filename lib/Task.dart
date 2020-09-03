@@ -1,11 +1,36 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 
-class Task{
+import 'dart:convert';
+
+List<Task> taskFromJson(String str) => List<Task>.from(json.decode(str).map((x) => Task.fromJson(x)));
+
+String taskToJson(List<Task> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+
+class Task  {
+  int id;
   String title;
   bool isdone;
-  Task({@required this.title, this.isdone = false });
+  Task({@required this.title, this.isdone = false}) ;
+
+  factory Task.fromJson(Map<dynamic, dynamic> json) => Task(
+    title: json["title"],
+    isdone: json["isdone"] == '1',
+  );
+
+  Map<String, dynamic> toJson() => {
+    "title": title,
+    "isdone": isdone ? '1' : '0',
+  };
+
   void toggleCompleted() {
     isdone = !isdone;
+  }
+
+  void setId( int id ){
+    id = this.id;
   }
 
 }

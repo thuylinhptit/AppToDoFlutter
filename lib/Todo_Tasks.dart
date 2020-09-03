@@ -1,23 +1,50 @@
 import 'dart:collection';
 import 'package:apptodo_flutter/Task.dart';
+import 'package:apptodo_flutter/database.dart';
 import 'package:apptodo_flutter/home_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum TodoStatus {
   allTasks,
   incompleteTasks,
   completedtask, fullDelete
 }
+
 class TodoTasks extends ChangeNotifier {
   final List <Task> _tasks = [];
+  final List <Task> _history = [];
   TodoStatus status = TodoStatus.allTasks;
+ // SharedPreferences prefs;
+
+//  TodoTasks() {
+//     SharedPreferences.getInstance().then((value) {
+//      prefs = value;
+//      String json =  prefs.getString("history");
+//      if(json != null) {
+//        _history.addAll(taskFromJson(json));
+//        _tasks.addAll(taskFromJson(json));
+//        notifyListeners();
+//      }
+//    });
+//  }
 
 
+  TodoTasks() {
+    var db = DatabaseHelper();
+    db.queryAll().then((value) {
+      _tasks.addAll(value);
+      notifyListeners();
+    });
+
+  }
+  
   UnmodifiableListView <Task> get tasks => UnmodifiableListView(
       status == TodoStatus.allTasks ? _tasks :
       status == TodoStatus.completedtask ? _tasks.where((element) => element.isdone)
       : _tasks.where((element) => !element.isdone)
   );
+
   int countComplete(){
     int count = 0;
     for( int i = 0 ; i< _tasks.length ; i++ ){
@@ -30,22 +57,30 @@ class TodoTasks extends ChangeNotifier {
 
   int countIncomplete(){
     return _tasks.length - countComplete();
-
   }
 
   void addTask( Task task ){
     _tasks.add(task);
+    _history.add(task);
+ //   prefs.setString("history",taskToJson(_tasks));
+   // prefs.setString("history",taskToJson(_history));
     notifyListeners();
   }
 
   void editTask( int index , Task task ){
    _tasks[index] = task;
+   _history[index] = task;
+  // prefs.setString("history",taskToJson(_tasks));
+ //  prefs.setString("history",taskToJson(_history));
    notifyListeners();
   }
 
   void toggleTodo(Task task) {
     final taskIndex = _tasks.indexOf(task);
     _tasks[taskIndex].toggleCompleted();
+    _history[taskIndex].toggleCompleted();
+  //  prefs.setString("history",taskToJson(_tasks));
+  //  prefs.setString("history",taskToJson(_history));
     notifyListeners();
   }
 
@@ -60,12 +95,16 @@ class TodoTasks extends ChangeNotifier {
   void fullDone ( ){
     for( int i=0; i<_tasks.length ; i++ ){
       _tasks[i].isdone = true;
+      _history[i].isdone = true;
     }
+   // prefs.setString("history",taskToJson(_tasks));
+   // prefs.setString("history",taskToJson(_history));
     notifyListeners();
   }
 
-  void fullDelete ( ){
+  void fullDelete (){
     _tasks.clear();
+  //  prefs.clear();
     notifyListeners();
   }
 
@@ -74,7 +113,6 @@ class TodoTasks extends ChangeNotifier {
     if( clickAll.index == 1 ) {
       if( task.isdone == false ){
         task.isdone = true;
-
       }
       status = TodoStatus.allTasks;
     }
@@ -88,9 +126,13 @@ class TodoTasks extends ChangeNotifier {
   }
 
   void Delete( int index ){
+   // prefs.setString("history",taskToJson(_tasks));
     _tasks.removeAt(index);
     notifyListeners();
   }
+
+  
+
 
 }
 
