@@ -78,7 +78,7 @@ class TodoTasks extends ChangeNotifier {
   void toggleTodo(Task task) {
     final taskIndex = _tasks.indexOf(task);
     _tasks[taskIndex].toggleCompleted();
-    _history[taskIndex].toggleCompleted();
+  //  _history[taskIndex].toggleCompleted();
   //  prefs.setString("history",taskToJson(_tasks));
   //  prefs.setString("history",taskToJson(_history));
     notifyListeners();

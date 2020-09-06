@@ -19,7 +19,6 @@ class DatabaseHelper {
   }
 
   DatabaseHelper._internal();
-  //////
 
   static Database _database;
 
@@ -52,7 +51,7 @@ class DatabaseHelper {
     return List<Task>.from((await db.query(table)).map((x) => Task.fromJson(x)));
   }
 
-  Future<int> update(Map<dynamic, dynamic> update) async {
+  Future<void> update(Map<dynamic, dynamic> update) async {
     final Database db = await database;
     int id = update[columnId];
     return await db
@@ -62,6 +61,11 @@ class DatabaseHelper {
   Future<int> delete(int id) async {
     final Database db = await database;
     return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  Future<void> deleteAll() async {
+    final db = await database;
+    db.delete(table);
   }
 
   Future<int> queryRowCount() async {
