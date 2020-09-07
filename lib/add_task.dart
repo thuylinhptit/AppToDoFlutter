@@ -6,11 +6,12 @@ import 'package:provider/provider.dart';
 
 import 'Task.dart';
 
-class AddTask extends StatefulWidget{
+class AddTask extends StatefulWidget {
   final Task task;
   final int index;
 
-  AddTask({ this.task, this.index});
+  AddTask({this.task, this.index});
+
   @override
   _AddTask createState() => _AddTask();
 }
@@ -24,8 +25,8 @@ class _AddTask extends State<AddTask> {
   @override
   void initState() {
     super.initState();
-    if( widget.task != null ){
-      taskTextController.text=widget.task.title;
+    if (widget.task != null) {
+      taskTextController.text = widget.task.title;
     }
   }
 
@@ -37,7 +38,6 @@ class _AddTask extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -53,15 +53,12 @@ class _AddTask extends State<AddTask> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 40),
-                    child: TextField(
-                      controller: taskTextController,
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                      decoration: InputDecoration(
-                        labelText: 'Add Todo'
-                      ),
-                    )
-                  ),
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 40),
+                      child: TextField(
+                        controller: taskTextController,
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        decoration: InputDecoration(labelText: 'Add Todo'),
+                      )),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: RaisedButton(
@@ -78,30 +75,34 @@ class _AddTask extends State<AddTask> {
       ),
     );
   }
+
   ///
-  void onSubmit(){
+  void onSubmit() {
     final String tasktext = taskTextController.text;
     final bool isdone = statusDone;
     var todoTaskProvider = Provider.of<TodoTasks>(context, listen: false);
 
     // Edit
-    if( widget.task != null && widget.index != null ){
-      todoTaskProvider.editTask(widget.index, Task(title: taskTextController.text,
-          isdone: widget.task.isdone));
-      Navigator.pop(context);
+    if (widget.task != null && widget.index != null) {
+      Task todo = Task(
+          title: taskTextController.text,
+          isdone: widget.task.isdone,
+          id: widget.task.id);
+      todoTaskProvider
+          .editTask(widget.index, todo)
+          .then((value) => Navigator.pop(context));
       return;
     }
     //Add
     if (tasktext.isNotEmpty) {
-       Task todo = Task(
-        title: tasktext, isdone : isdone,
+      Task todo = Task(
+        title: tasktext,
+        isdone: isdone,
       );
-      todoTaskProvider.addTask(todo);
-       DatabaseHelper().insertTask(todo);
-      Navigator.pop(context);
-      print('Done Add');
+      todoTaskProvider.addTask(todo).then((value) {
+        Navigator.pop(context);
+        print('Done Add');
+      });
     }
   }
-
-
 }

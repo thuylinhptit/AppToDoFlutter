@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:apptodo_flutter/Todo_Tasks.dart';
 import 'package:apptodo_flutter/add_task.dart';
+import 'package:apptodo_flutter/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -99,7 +100,6 @@ class ItemTask extends StatelessWidget{
             FlatButton(
               child: Text('Delete'),
               onPressed: () {
-                _delete();
                 Provider.of<TodoTasks>(context, listen: false).Delete(index);
                 Navigator.of(context).pop(true);
               }
@@ -109,10 +109,6 @@ class ItemTask extends StatelessWidget{
       }
     );
   }
-  void _delete() async {
-    final id = await dbHelper.queryRowCount();
-    final rowsDeleted = await dbHelper.delete(id);
-    print('deleted $rowsDeleted row(s): row $id');
-  }
+
 
 }
