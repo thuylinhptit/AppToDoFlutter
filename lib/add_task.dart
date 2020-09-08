@@ -1,4 +1,4 @@
-import 'package:apptodo_flutter/task_history.dart';
+
 import 'package:apptodo_flutter/todo_task.dart';
 import 'package:apptodo_flutter/database.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,10 +9,9 @@ import 'task.dart';
 
 class AddTask extends StatefulWidget {
   final Task task;
-  final TaskHistory taskH;
   final int index;
 
-  AddTask({this.task, this.index, this.taskH});
+  AddTask({this.task, this.index});
 
   @override
   _AddTask createState() => _AddTask();
