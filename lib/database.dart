@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:apptodo_flutter/Task.dart';
+import 'package:apptodo_flutter/task.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,7 +12,6 @@ class DatabaseHelper {
   static final columnDone = 'isdone';
   static final columnContent = 'title';
 
-  //// singleton
   static final DatabaseHelper _singleton = DatabaseHelper._internal();
 
   factory DatabaseHelper() {
@@ -70,14 +69,9 @@ class DatabaseHelper {
     return await db.rawQuery("DELETE FROM $table WHERE rowid = ?", [task.id]);
   }
 
-  Future<void> deleteAll() async {
-    final db = await database;
-    db.delete(table);
-  }
+//  Future<void> deleteAll() async {
+//    final db = await database;
+//    return await db.delete(table);
+//  }
 
-  Future<int> queryRowCount() async {
-    final Database db = await database;
-    return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM $table'));
-  }
 }

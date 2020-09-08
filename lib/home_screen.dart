@@ -1,5 +1,5 @@
-import 'package:apptodo_flutter/Task.dart';
-import 'package:apptodo_flutter/Todo_Tasks.dart';
+import 'package:apptodo_flutter/task.dart';
+import 'package:apptodo_flutter/todo_task.dart';
 import 'package:apptodo_flutter/add_task.dart';
 import 'package:apptodo_flutter/list_task.dart';
 import 'package:flutter/cupertino.dart';

@@ -1,4 +1,4 @@
-import 'package:apptodo_flutter/Task.dart';
+import 'package:apptodo_flutter/task.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'item_task.dart';

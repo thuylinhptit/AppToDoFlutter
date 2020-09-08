@@ -1,4 +1,5 @@
-import 'package:apptodo_flutter/Todo_Tasks.dart';
+import 'package:apptodo_flutter/todo_task.dart';
+import 'package:apptodo_flutter/history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,9 +56,7 @@ class _BottomNavigaton extends State<BottomNavigation>{
       ),
     ),
      Center(
-//       child: Consumer<TodoTasks> (
-//
-//       ),
+       child: History(),
 
      )
   ];

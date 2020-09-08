@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:apptodo_flutter/Todo_Tasks.dart';
+import 'package:apptodo_flutter/todo_task.dart';
 import 'package:apptodo_flutter/add_task.dart';
 import 'package:apptodo_flutter/database.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:random_color/random_color.dart';
-import 'Task.dart';
+import 'task.dart';
 
 @HiveType(typeId: 0)
 class MyListTask extends HiveObject {
@@ -26,29 +26,7 @@ class ItemTask extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    Color _color;
-    var rm = new Random();
-    var rng;
-    for (var i = 0; i < 1; i++) {
-       rng = (rm.nextInt(5));
-    }
-    if( rng == 0 ){
-      _color = Colors.pinkAccent;
-    }
-    else if( rng == 1 ){
-      _color = Colors.lightGreen;
-    }
-    else if( rng == 2 ){
-      _color = Colors.orangeAccent;
-    }
-    else if( rng == 3 ){
-      _color = Colors.purpleAccent;
-    }
-    else {
-      _color = Colors.lightBlueAccent;
-    }
-
-        return Padding(
+     return Padding(
           padding: const EdgeInsets.fromLTRB(5, 3, 0, 0),
           child: Slidable(
             actionPane: SlidableDrawerActionPane(),
