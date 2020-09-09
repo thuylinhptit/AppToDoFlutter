@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:random_color/random_color.dart';
 import 'task.dart';
 
 @HiveType(typeId: 0)
@@ -66,6 +65,8 @@ class ItemTask extends StatelessWidget{
   }
 
   Future<bool> Delete(BuildContext context,  int index){
+    final taskProvider = Provider.of<TodoTasks>(context, listen: false);
+
     return showDialog<bool>(
       context: context,
       builder: (context){
@@ -78,7 +79,7 @@ class ItemTask extends StatelessWidget{
             FlatButton(
               child: Text('Delete'),
               onPressed: () {
-                Provider.of<TodoTasks>(context, listen: false).Delete(index);
+                taskProvider.delete(task.id);
                 Navigator.of(context).pop(true);
               }
             )

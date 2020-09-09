@@ -1,22 +1,38 @@
 import 'dart:collection';
+import 'package:apptodo_flutter/api.dart';
+import 'package:apptodo_flutter/locator.dart';
 import 'package:apptodo_flutter/task.dart';
 import 'package:apptodo_flutter/database.dart';
 import 'package:apptodo_flutter/home_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 enum TodoStatus { allTasks, incompleteTasks, completedtask, fullDelete }
 
 class TodoTasks extends ChangeNotifier {
-  final List<Task> _tasks = [];
-  final List<Task> _history = [];
+  List<Task> _tasks = [];
   TodoStatus status = TodoStatus.allTasks;
+  Api _api = locator<Api>();
 
-  var db = DatabaseHelper();
+  Future<List<Task>> fetchTasks() async {
+ //   await Firebase.initializeApp();
+    var result = await _api.getData();
+    var _tasks =
+        result.docs.map((doc) => Task.fromMap(doc.data(), doc.id)).toList();
+    return _tasks;
+  }
 
   TodoTasks() {
-    db.queryAll().then((value) {
-      _tasks.addAll(value);
-      _history.addAll(value);
+    _api.streamData().listen((snapshot) {
+      var tasks = snapshot.docs.map((doc) {
+        return Task(
+            id: doc.id,
+            title: doc.data()["title"],
+            isdone: doc.data()["isdone"]);
+      });
+      _tasks.clear();
+      _tasks.addAll(tasks);
       notifyListeners();
     });
   }
@@ -27,13 +43,6 @@ class TodoTasks extends ChangeNotifier {
           : status == TodoStatus.completedtask
               ? _tasks.where((element) => element.isdone)
               : _tasks.where((element) => !element.isdone));
-
-  UnmodifiableListView<Task> get history =>
-      UnmodifiableListView(status == TodoStatus.allTasks
-          ? _history
-          : status == TodoStatus.completedtask
-          ? _history
-          : _history);
 
   int countComplete() {
     int count = 0;
@@ -49,27 +58,28 @@ class TodoTasks extends ChangeNotifier {
     return _tasks.length - countComplete();
   }
 
-  Future<void> addTask(Task task) async {
-    var newTask  = await db.insertTask(task);
-    _tasks.add(newTask);
-    _history.add(newTask);
-    notifyListeners();
+  Future addTask(Task task) async {
+    await _api.addTask(task.toJson());
+//    notifyListeners();
   }
 
-  Future<void> editTask(int index, Task task) async {
-    _tasks[index] = task;
-    _history[index] = task;
-    await db.update(task);
-    notifyListeners();
+  Future updateTask(Task task, String id) async {
+    await _api.updateTask(task.toJson(), id);
+    //notifyListeners();
   }
 
+  Future delete(String id) async {
+    await _api.removeTask(id);
+   // notifyListeners();
+  }
 
+  Stream<QuerySnapshot> fetchTaskAsStream() {
+    return _api.streamData();
+  }
 
   Future<void> toggleTodo(Task task) async {
     final taskIndex = _tasks.indexOf(task);
     _tasks[taskIndex].toggleCompleted();
-    //_history[taskIndex].toggleCompleted();
-    await db.update(task);
     notifyListeners();
   }
 
@@ -85,15 +95,12 @@ class TodoTasks extends ChangeNotifier {
   Future<void> fullDone() async {
     for (int i = 0; i < _tasks.length; i++) {
       _tasks[i].isdone = true;
-      _history[i].isdone = true;
-      await db.update(_tasks[i]);
     }
     notifyListeners();
   }
 
   void fullDelete() {
-    for( int i=0 ; i < _tasks.length ; i++){
-      db.delete(_tasks[i]);
+    for (int i = 0; i < _tasks.length; i++) {
       _tasks.removeAt(i);
       notifyListeners();
     }
@@ -113,12 +120,6 @@ class TodoTasks extends ChangeNotifier {
       }
       status = TodoStatus.fullDelete;
     }
-    notifyListeners();
-  }
-
-  void Delete(int index) {
-    db.delete(_tasks[index]);
-    _tasks.removeAt(index);
     notifyListeners();
   }
 }

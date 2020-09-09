@@ -2,22 +2,25 @@ import 'package:apptodo_flutter/task.dart';
 import 'package:apptodo_flutter/todo_task.dart';
 import 'package:apptodo_flutter/add_task.dart';
 import 'package:apptodo_flutter/list_task.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:random_color/random_color.dart';
 
 
 class HomeScreen extends StatefulWidget{
   @override
   _HomeScreen createState() => _HomeScreen();
 
+
 }
 class _HomeScreen extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return  Stack(
           children: [
             Scaffold(
@@ -67,10 +70,11 @@ class _HomeScreen extends State<HomeScreen> {
                   ),
                 ],
               ),
-              body: Consumer<TodoTasks> (
-                  builder: (context, model, _) {
-                    return  ListTask( listTask: model.tasks,);
-                  }
+
+              body: Consumer<TodoTasks>(
+                builder: (context, model, _ ){
+                  return ListTask( listTask: model.tasks,);
+                },
               ),
               floatingActionButton: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 20),

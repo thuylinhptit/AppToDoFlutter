@@ -1,16 +1,16 @@
-import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'locator.dart';
 import 'todo_task.dart';
 import 'bottomnavgation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 void main() async{
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  setupLocator();
 
   runApp(
       ChangeNotifierProvider<TodoTasks>(

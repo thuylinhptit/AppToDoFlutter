@@ -17,8 +17,6 @@ class AddTask extends StatefulWidget {
   _AddTask createState() => _AddTask();
 }
 
-final dbHelper = DatabaseHelper();
-
 class _AddTask extends State<AddTask> {
   final taskTextController = TextEditingController();
   bool statusDone = false;
@@ -39,6 +37,7 @@ class _AddTask extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -78,10 +77,10 @@ class _AddTask extends State<AddTask> {
   }
 
   ///
-  void onSubmit() {
+  Future<void> onSubmit() async {
     final String tasktext = taskTextController.text;
     final bool isdone = statusDone;
-    var todoTaskProvider = Provider.of<TodoTasks>(context, listen: false);
+    final taskProvider = Provider.of<TodoTasks>(context, listen:  false);
 
     // Edit
     if (widget.task != null && widget.index != null) {
@@ -89,9 +88,8 @@ class _AddTask extends State<AddTask> {
           title: taskTextController.text,
           isdone: widget.task.isdone,
           id: widget.task.id);
-      todoTaskProvider
-          .editTask(widget.index, todo)
-          .then((value) => Navigator.pop(context));
+          await taskProvider.updateTask(todo, widget.task.id.toString());
+          Navigator.pop(context);
       return;
     }
     //Add
@@ -100,10 +98,13 @@ class _AddTask extends State<AddTask> {
         title: tasktext,
         isdone: isdone,
       );
-      todoTaskProvider.addTask(todo).then((value) {
-        Navigator.pop(context);
-        print('Done Add');
-      });
+      print("${tasktext.toString()}");
+      await taskProvider.addTask(todo);
+      Navigator.pop(context);
+      print('Done Add');
+    }
+    else{
+      print("Not");
     }
   }
 }
