@@ -80,6 +80,7 @@ class TodoTasks extends ChangeNotifier {
   Future<void> toggleTodo(Task task) async {
     final taskIndex = _tasks.indexOf(task);
     _tasks[taskIndex].toggleCompleted();
+    await _api.updateTask(task.toJson(), task.id);
     notifyListeners();
   }
 
@@ -95,15 +96,16 @@ class TodoTasks extends ChangeNotifier {
   Future<void> fullDone() async {
     for (int i = 0; i < _tasks.length; i++) {
       _tasks[i].isdone = true;
+      await _api.updateTask(_tasks[i].toJson(), _tasks[i].id);
     }
     notifyListeners();
   }
 
-  void fullDelete() {
+  void fullDelete() async{
     for (int i = 0; i < _tasks.length; i++) {
-      _tasks.removeAt(i);
-      notifyListeners();
+       _api.removeTask(_tasks[i].id);
     }
+    notifyListeners();
   }
 
   void choiceClickAll(ClickAll clickAll) {
