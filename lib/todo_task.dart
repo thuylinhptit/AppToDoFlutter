@@ -16,7 +16,6 @@ class TodoTasks extends ChangeNotifier {
   Api _api = locator<Api>();
 
   Future<List<Task>> fetchTasks() async {
- //   await Firebase.initializeApp();
     var result = await _api.getData();
     var _tasks =
         result.docs.map((doc) => Task.fromMap(doc.data(), doc.id)).toList();
@@ -43,7 +42,6 @@ class TodoTasks extends ChangeNotifier {
           : status == TodoStatus.completedtask
               ? _tasks.where((element) => element.isdone)
               : _tasks.where((element) => !element.isdone));
-
   int countComplete() {
     int count = 0;
     for (int i = 0; i < _tasks.length; i++) {
@@ -60,17 +58,14 @@ class TodoTasks extends ChangeNotifier {
 
   Future addTask(Task task) async {
     await _api.addTask(task.toJson());
-//    notifyListeners();
   }
 
   Future updateTask(Task task, String id) async {
     await _api.updateTask(task.toJson(), id);
-    //notifyListeners();
   }
 
   Future delete(String id) async {
     await _api.removeTask(id);
-   // notifyListeners();
   }
 
   Stream<QuerySnapshot> fetchTaskAsStream() {

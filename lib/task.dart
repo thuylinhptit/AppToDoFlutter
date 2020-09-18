@@ -9,18 +9,21 @@ class Task {
   String id;
   String title;
   bool isdone;
+  bool isDelete;
 
-  Task({this.id, this.title, this.isdone});
+  Task({this.id, this.title, this.isdone, this.isDelete});
 
   Task.fromMap(Map snapshot,String id) :
         id = id ?? '',
         title = snapshot['title'] ?? '',
-        isdone = snapshot['isdone'] ?? '';
+        isdone = snapshot['isdone'] ?? '',
+        isDelete = snapshot['isDelete'] ?? '';
 
   toJson() {
     return {
       "title": title,
       "isdone": isdone,
+      "isDelete": isDelete,
     };
   }
   void toggleCompleted() {

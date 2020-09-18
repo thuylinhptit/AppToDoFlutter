@@ -12,6 +12,8 @@ class History extends StatelessWidget{
         title: Text(
           'History', style: TextStyle( fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.lightBlueAccent,
+        centerTitle: true,
       ),
 //      body: Consumer<TodoTasks>(
 //        builder: (context, model, _ ){

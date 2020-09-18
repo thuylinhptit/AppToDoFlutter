@@ -79,6 +79,7 @@ class ItemTask extends StatelessWidget{
             FlatButton(
               child: Text('Delete'),
               onPressed: () {
+                task.isDelete  = true;
                 taskProvider.delete(task.id);
                 Navigator.of(context).pop(true);
               }
